@@ -51,17 +51,22 @@ namespace MenuManagement.Persistence
                 var isLocalHost =
                     string.Equals(builder.Host, "localhost", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(builder.Host, "127.0.0.1", StringComparison.OrdinalIgnoreCase);
+                var isInternalHost = builder.Host.EndsWith(".internal", StringComparison.OrdinalIgnoreCase);
 
                 if (builder.Port == 0)
                 {
                     builder.Port = 5432;
                 }
 
-                if (isLocalHost)
+                if (isLocalHost || isInternalHost)
                 {
                     builder.SslMode = SslMode.Disable;
                 }
-                else if (builder.SslMode == SslMode.Disable || builder.SslMode == SslMode.Prefer)
+                else if (builder.SslMode == SslMode.Disable)
+                {
+                    // Keep it disabled if explicitly requested
+                }
+                else
                 {
                     builder.SslMode = SslMode.Prefer;
                 }
@@ -96,6 +101,21 @@ namespace MenuManagement.Persistence
                     Username = Uri.UnescapeDataString(userInfo[0]),
                     Password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : string.Empty
                 };
+
+                // Add query parameters to the builder
+                var query = databaseUri.Query.TrimStart('?');
+                if (!string.IsNullOrWhiteSpace(query))
+                {
+                    var pairs = query.Split('&');
+                    foreach (var pair in pairs)
+                    {
+                        var kvp = pair.Split('=', 2);
+                        if (kvp.Length == 2)
+                        {
+                            builder[kvp[0]] = Uri.UnescapeDataString(kvp[1]);
+                        }
+                    }
+                }
 
                 return builder.ConnectionString;
             }
