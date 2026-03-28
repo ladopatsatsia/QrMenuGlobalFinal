@@ -30,4 +30,5 @@ jobs:
       - name: Setup Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy Frontend
-        run: flyctl deploy --config frontend/fly.toml --dockerfile frontend/Dockerfile --yes --now
+        working-directory: frontend
+        run: flyctl deploy --config fly.toml --yes --now
