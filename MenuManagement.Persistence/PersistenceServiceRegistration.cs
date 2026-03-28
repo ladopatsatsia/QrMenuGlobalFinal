@@ -51,7 +51,9 @@ namespace MenuManagement.Persistence
                 var isLocalHost =
                     string.Equals(builder.Host, "localhost", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(builder.Host, "127.0.0.1", StringComparison.OrdinalIgnoreCase);
-                var isInternalHost = builder.Host.EndsWith(".internal", StringComparison.OrdinalIgnoreCase);
+                var isInternalHost = 
+                    builder.Host.EndsWith(".internal", StringComparison.OrdinalIgnoreCase) ||
+                    builder.Host.StartsWith("fdaa:", StringComparison.OrdinalIgnoreCase); // Fly.io internal IPv6
 
                 if (builder.Port == 0)
                 {
@@ -62,13 +64,10 @@ namespace MenuManagement.Persistence
                 {
                     builder.SslMode = SslMode.Disable;
                 }
-                else if (builder.SslMode == SslMode.Disable)
+                else if (builder.SslMode != SslMode.Require)
                 {
-                    // Keep it disabled if explicitly requested
-                }
-                else
-                {
-                    builder.SslMode = SslMode.Prefer;
+                    // For external connections, Prefer is safer but Disable is more compatible if no certs
+                    builder.SslMode = SslMode.Disable;
                 }
 
                 return builder.ConnectionString;
