@@ -122,7 +122,8 @@ bool IsAllowedOrigin(string? origin)
         || uri.Host.StartsWith("172.", StringComparison.OrdinalIgnoreCase)
         || uri.Host.StartsWith("10.", StringComparison.OrdinalIgnoreCase)
         || uri.Host.EndsWith(".onrender.com", StringComparison.OrdinalIgnoreCase)
-        || uri.Host.EndsWith(".trycloudflare.com", StringComparison.OrdinalIgnoreCase);
+        || uri.Host.EndsWith(".trycloudflare.com", StringComparison.OrdinalIgnoreCase)
+        || uri.Host.EndsWith(".fly.dev", StringComparison.OrdinalIgnoreCase);
 }
 
 builder.Services.AddCors(options =>

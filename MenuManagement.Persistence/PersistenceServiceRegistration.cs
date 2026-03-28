@@ -62,13 +62,18 @@ namespace MenuManagement.Persistence
 
                 if (isLocalHost || isInternalHost)
                 {
-                    builder.SslMode = SslMode.Disable;
+                    builder.SslMode = SslMode.Prefer;
                 }
                 else if (builder.SslMode != SslMode.Require)
                 {
                     // For external connections, Prefer is safer but Disable is more compatible if no certs
-                    builder.SslMode = SslMode.Disable;
+                    builder.SslMode = SslMode.Prefer;
                 }
+
+                // Add stability parameters
+                builder.CommandTimeout = 60;
+                builder.Timeout = 60;
+                builder.TrustServerCertificate = true; // Often needed with SslMode.Prefer on internal networks
 
                 System.Console.WriteLine($"[Persistence] DB Host: '{builder.Host}', SslMode: {builder.SslMode}");
 
