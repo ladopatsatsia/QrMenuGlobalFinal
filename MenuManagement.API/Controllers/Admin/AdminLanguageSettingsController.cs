@@ -18,6 +18,7 @@ namespace MenuManagement.API.Controllers.Admin
             return Ok(await Mediator.Send(new GetLanguageSettingsQuery()));
         }
 
+
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateLanguageSettingCommand command)
         {
