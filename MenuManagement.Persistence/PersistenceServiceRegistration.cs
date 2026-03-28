@@ -70,6 +70,8 @@ namespace MenuManagement.Persistence
                     builder.SslMode = SslMode.Disable;
                 }
 
+                System.Console.WriteLine($"[Persistence] DB Host: '{builder.Host}', SslMode: {builder.SslMode}");
+
                 return builder.ConnectionString;
             }
             catch
