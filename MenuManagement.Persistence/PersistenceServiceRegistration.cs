@@ -63,7 +63,7 @@ namespace MenuManagement.Persistence
                 }
                 else if (builder.SslMode == SslMode.Disable || builder.SslMode == SslMode.Prefer)
                 {
-                    builder.SslMode = SslMode.Require;
+                    builder.SslMode = SslMode.Prefer;
                 }
 
                 return builder.ConnectionString;
